@@ -1,19 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.CDC.GuardiaBackend.Entities;
 
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-/**
- *
- * @author micae
- */
 @Data
 @Entity
 public class Protocol {
@@ -23,5 +16,15 @@ public class Protocol {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     protected String id;
     
+    private String title;
+    private String firstAutor;
+    private String secondAutor;
+    private String introduction;
+    private String generalInformation;
+    private String procedures;
+    private String annex;
+    private String videoLink;
+    private String protocolLink;
+    private Date createdDate;
 
 }
