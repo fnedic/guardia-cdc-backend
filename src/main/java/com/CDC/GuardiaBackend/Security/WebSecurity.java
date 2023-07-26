@@ -1,13 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.CDC.GuardiaBackend.Security;
 
-/**
- *
- * @author micae
- */
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import com.CDC.GuardiaBackend.Services.UserService;
+
+@Configuration
 public class WebSecurity {
     
+    @Autowired
+    public UserService userService; 
+
 }
