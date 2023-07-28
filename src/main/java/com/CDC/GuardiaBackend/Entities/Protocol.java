@@ -24,7 +24,7 @@ public class Protocol {
     private String procedures;
     private String annex;
     private String videoLink;
-    private String protocolLink;
+    private String drivelLink;
     private Date createdDate;
 
 }
