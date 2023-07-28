@@ -1,13 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package com.CDC.GuardiaBackend.Enums;
 
-/**
- *
- * @author mathe
- */
 public enum GroupProtocol {
-    
+    TRAUMATOLOGÍA,
+    URGENCIAS,
+    CARDIOVASCULAR,
+    RESPIRATORIO,
+    INFECTOLOGÍA,
+    UROLOGÍA,
+    CIRUGÍA,
+    TOXICOLOGÍA,
+    OTORRINOLARINGOLOGÍA,
+    GENERALES
 }
