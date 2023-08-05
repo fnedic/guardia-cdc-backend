@@ -11,19 +11,26 @@ import com.CDC.GuardiaBackend.Enums.Roles;
 import com.CDC.GuardiaBackend.Enums.UserStatus;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
 import com.CDC.GuardiaBackend.Exceptions.MyException;
+import javax.servlet.http.HttpSession;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
-public class UserService {
-    
+public class UserService implements UserDetailsService {
+
     @Autowired
     private UserRepository userRepository;
 
-    // ---- Service USER ------ (Se usara para crear, leer, modificar y borrar )
-    
+// ---- Service USER ------ (Se usara para crear, leer, modificar y borrar )
     // CREATED
     @Transactional
     public void createUser(User user) throws MyException {
-        
+
         validateEmail(user);
 
         try {
@@ -69,15 +76,15 @@ public class UserService {
     public List<User> userList() throws MyException {
         try {
 
-        List<User> usersList = new ArrayList<>();
+            List<User> usersList = new ArrayList<>();
 
-        usersList = userRepository.findAll();
+            usersList = userRepository.findAll();
 
-        return usersList;
+            return usersList;
         } catch (Exception e) {
             throw new MyException("ERROR, Lista de usuarios no encontrada");
         }
-        
+
     }
 
     //UPDATE
@@ -85,12 +92,12 @@ public class UserService {
         if (user.getStatus().name().equals("ACTIVE")) {
 
             user.setStatus(UserStatus.INACTIVE);
-            
-        }else if (user.getStatus().name().equals("INACTIVE")) {
-            
+
+        } else if (user.getStatus().name().equals("INACTIVE")) {
+
             user.setStatus(UserStatus.ACTIVE);
 
-        }else if (user.getStatus().name().equals("PENDING")){
+        } else if (user.getStatus().name().equals("PENDING")) {
 
             user.setStatus(UserStatus.ACTIVE);
         }
@@ -99,7 +106,6 @@ public class UserService {
     }
 
     //DELETE
-
     @Transactional
     public void deleteUser(String id) throws MyException {
         try {
@@ -116,7 +122,7 @@ public class UserService {
     @Transactional
     public boolean validateEmail(User user) throws MyException {
         try {
-            
+
             boolean validator = false;
 
             if (userRepository.searchByEmail(user.getEmail()) != null) {
@@ -129,7 +135,23 @@ public class UserService {
             throw new MyException("ERROR, Email ocupado");
 
         }
-        
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.searchByEmail(email);
+        if (user != null) {
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            GrantedAuthority p = new SimpleGrantedAuthority("ROLE_" + user.getRole().toString());
+            authorities.add(p);
+
+            return new org.springframework.security.core.userdetails.User(
+                    user.getEmail(), user.getPassword(), authorities);
+        } else {
+            System.out.println("USUARIO NULO");
+            throw new UsernameNotFoundException("Usuario no encontrado");
+
+        }
     }
 }
