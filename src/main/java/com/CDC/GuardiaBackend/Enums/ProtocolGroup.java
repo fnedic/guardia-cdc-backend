@@ -1,6 +1,6 @@
 package com.CDC.GuardiaBackend.Enums;
 
-public enum GroupProtocol {
+public enum ProtocolGroup {
     TRAUMATOLOGÍA,
     URGENCIAS,
     CARDIOVASCULAR,

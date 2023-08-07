@@ -11,14 +11,11 @@ import com.CDC.GuardiaBackend.Enums.Roles;
 import com.CDC.GuardiaBackend.Enums.UserStatus;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
 import com.CDC.GuardiaBackend.Exceptions.MyException;
-import javax.servlet.http.HttpSession;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 public class UserService implements UserDetailsService {
