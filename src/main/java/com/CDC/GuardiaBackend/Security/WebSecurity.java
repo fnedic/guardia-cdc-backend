@@ -40,6 +40,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/cdc/login").permitAll()
                 .antMatchers("/cdc/user").permitAll()
+                .antMatchers("/protocol/list").permitAll()
+                .antMatchers("/protocol/view").permitAll()
 
                 .antMatchers("/protocol/upload").permitAll()
 
