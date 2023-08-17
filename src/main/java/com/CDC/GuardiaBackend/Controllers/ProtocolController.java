@@ -1,11 +1,13 @@
 package com.CDC.GuardiaBackend.Controllers;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,14 +35,14 @@ public class ProtocolController {
         return protocolRepository.save(protocol);
     }
 
-    @GetMapping("view")
-    public ResponseEntity<Protocol> protocolList() throws MyException {
+    @GetMapping("view/{id}")
+    public ResponseEntity<Protocol> protocolRender(@PathVariable String id) throws MyException {
         try {
-            String id = "9b192651-e14b-4a01-bb4a-b3b5374fda27";
             Optional<Protocol> protocolFind = protocolRepository.findById(id);
 
             if (protocolFind.isPresent()) {
                 Protocol protocol = protocolFind.get();
+                System.out.println(protocol.toString());
                 return ResponseEntity.ok(protocol);
             } else {
                 throw new MyException("Protocolo no encontrado");
@@ -48,5 +50,10 @@ public class ProtocolController {
         } catch (Exception e) {
             throw new MyException("Error al traer protocolo");
         }
+    }
+
+    @GetMapping("list")
+    public List<Protocol> protocolList() throws MyException {
+        return protocolRepository.findAll();
     }
 }
