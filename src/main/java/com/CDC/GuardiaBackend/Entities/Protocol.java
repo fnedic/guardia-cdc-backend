@@ -17,6 +17,7 @@ public class Protocol {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     protected String id;
     
+    private int views;
     private String title;
     private String autor1;
     private String autor2;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.CDC.GuardiaBackend.Entities.Protocol;
@@ -55,5 +56,38 @@ public class ProtocolController {
     @GetMapping("list")
     public List<Protocol> protocolList() throws MyException {
         return protocolRepository.findAll();
+    }
+
+    @GetMapping("mostviewed")
+    public ResponseEntity<Protocol> getMostViewed() throws MyException {
+
+        try {
+
+            Protocol mostViewedProtocol = protocolService.getMostViewed();
+            return ResponseEntity.ok(mostViewedProtocol);
+
+        } catch (Exception e) {
+            throw new MyException("Error al procesar solicitud en el controlador!");
+        }
+    }
+
+    @PostMapping("mostviewed/{id}")
+    public String mostViewedProtocol(@PathVariable String id) throws MyException{
+
+        try {
+
+            Optional<Protocol> optionalProtocol = protocolRepository.findById(id);
+
+            if(optionalProtocol.isPresent()) {
+                Protocol protocol = optionalProtocol.get();
+                protocol.setViews(optionalProtocol.get().getViews()+1);
+                protocolRepository.save(protocol);
+            }
+
+            return null;
+        } catch (Exception e) {
+            throw new MyException("Error al procesar numero de visita");
+        }
+
     }
 }
