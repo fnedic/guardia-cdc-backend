@@ -31,24 +31,32 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(new BCryptPasswordEncoder());
     }
 
+    private static final String[] PUBLIC_URLS = {
+        "/cdc/login",
+        "/cdc/user",
+        "/cdc/user/{id}",
+
+        "/protocol/list",
+        "/protocol/view/{id}",
+        "/protocol/mostviewed",
+        "/protocol/mostviewed/{id}",
+        "/protocol/upload",
+
+        "/admin/protocol",
+        
+    };
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/cdc/login").permitAll()
-                .antMatchers("/cdc/user").permitAll()
-                .antMatchers("/protocol/list").permitAll()
-                .antMatchers("/protocol/view/{id}").permitAll()
-                .antMatchers("/protocol/mostviewed").permitAll()
-                .antMatchers("/protocol/mostviewed/{id}").permitAll()
-                .antMatchers("/protocol/upload").permitAll()
-                .antMatchers("/cdc/user/{id}").permitAll()
+            .cors()
+            .and()
+            .csrf().disable()
+            .authorizeRequests()
+                .antMatchers(PUBLIC_URLS).permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+            .and()
+            .httpBasic();
     }
 
 }
