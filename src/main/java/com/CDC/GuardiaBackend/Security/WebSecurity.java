@@ -41,8 +41,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         "/protocol/mostviewed",
         "/protocol/mostviewed/{id}",
         "/protocol/upload",
-
-        "/admin/protocol",
+        "/protocol/delete/{id}",
         
     };
     

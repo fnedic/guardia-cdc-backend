@@ -71,15 +71,15 @@ public class ProtocolController {
     }
 
     @PostMapping("mostviewed/{id}")
-    public String mostViewedProtocol(@PathVariable String id) throws MyException{
+    public String mostViewedProtocol(@PathVariable String id) throws MyException {
 
         try {
 
             Optional<Protocol> optionalProtocol = protocolRepository.findById(id);
 
-            if(optionalProtocol.isPresent()) {
+            if (optionalProtocol.isPresent()) {
                 Protocol protocol = optionalProtocol.get();
-                protocol.setViews(optionalProtocol.get().getViews()+1);
+                protocol.setViews(optionalProtocol.get().getViews() + 1);
                 protocolRepository.save(protocol);
             }
 
@@ -88,5 +88,23 @@ public class ProtocolController {
             throw new MyException("Error al procesar numero de visita");
         }
 
+    }
+
+    @GetMapping("delete/{id}")
+    public String deleteProtocol(@PathVariable String id) throws MyException {
+
+        try {
+
+            Optional<Protocol> optionalProtocol = protocolRepository.findById(id);
+            if (optionalProtocol.isPresent()) {
+                protocolRepository.deleteById(id);
+                return null;
+            } else {
+                throw new MyException("Protocolo no encontrado");
+            }
+
+        } catch (Exception e) {
+            throw new MyException("Error al procesar solicitud en el controlador!");
+        }
     }
 }
