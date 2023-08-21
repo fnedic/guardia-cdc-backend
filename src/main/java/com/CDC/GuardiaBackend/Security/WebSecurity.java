@@ -6,23 +6,24 @@ import com.CDC.GuardiaBackend.Services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurity extends WebSecurityConfigurerAdapter {
+public class WebSecurity {
 
     @Autowired
     private UserService userService;
 
-    @Override
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Autowired
@@ -32,30 +33,31 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     private static final String[] PUBLIC_URLS = {
-        "/cdc/login",
-        "/cdc/user",
-        "/cdc/user/{id}",
+            "/cdc/login",
+            "/cdc/user",
+            "/cdc/user/{id}",
 
-        "/protocol/list",
-        "/protocol/view/{id}",
-        "/protocol/mostviewed",
-        "/protocol/mostviewed/{id}",
-        "/protocol/upload",
-        "/protocol/delete/{id}",
-        
+            "/protocol/list",
+            "/protocol/view/{id}",
+            "/protocol/mostviewed",
+            "/protocol/mostviewed/{id}",
+            "/protocol/upload",
+            "/protocol/delete/{id}",
+
     };
-    
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors()
-            .and()
-            .csrf().disable()
-            .authorizeRequests()
+                .cors()
+                .and()
+                .csrf().disable()
+                .authorizeRequests()
                 .antMatchers(PUBLIC_URLS).permitAll()
                 .anyRequest().authenticated()
-            .and()
-            .httpBasic();
+                .and()
+                .httpBasic();
+        return http.build();
     }
 
 }
