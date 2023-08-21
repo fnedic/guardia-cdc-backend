@@ -36,6 +36,7 @@ public class WebSecurity {
             "/cdc/login",
             "/cdc/user",
             "/cdc/user/{id}",
+            "/cdc/user/delete/{id}",
 
             "/protocol/list",
             "/protocol/view/{id}",
