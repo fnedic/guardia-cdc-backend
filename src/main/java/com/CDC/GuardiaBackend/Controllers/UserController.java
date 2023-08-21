@@ -2,11 +2,14 @@ package com.CDC.GuardiaBackend.Controllers;
 
 import com.CDC.GuardiaBackend.DTO.LoginRequest;
 import com.CDC.GuardiaBackend.Entities.User;
+import com.CDC.GuardiaBackend.Exceptions.MyException;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.CDC.GuardiaBackend.Services.UserService;
 import java.util.List;
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,7 +49,7 @@ public class UserController {
 
     @PostMapping("user")
     public User createUser(@RequestBody User user) {
-        //     Encriptar la contraseña antes de guardar al usuario
+        // Encriptar la contraseña antes de guardar al usuario
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -64,15 +67,15 @@ public class UserController {
         try {
             // Autenticar al usuario
             UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(userDetails, loginRequest.getPassword(), userDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, loginRequest.getPassword(), userDetails.getAuthorities());
 
-            //autorizado para acceder a paginas protegidas
+            // autorizado para acceder a paginas protegidas
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Obtener el atributo de la sesión
-            //Mantiene el estado del usuario 
+            // Mantiene el estado del usuario
             ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             HttpSession session = attr.getRequest().getSession(true);
             session.setAttribute("userSession", userDetails);
@@ -103,6 +106,24 @@ public class UserController {
 
         return ResponseEntity.ok().body(savedUser);
 
+    }
+
+    @GetMapping("user/delete/{id}")
+    public String deleteUser(@PathVariable String id) throws MyException {
+
+        try {
+
+            Optional<User> optionalProtocol = userRepository.findById(id);
+            if (optionalProtocol.isPresent()) {
+                userRepository.deleteById(id);
+                return null;
+            } else {
+                throw new MyException("Usuario no encontrado");
+            }
+
+        } catch (Exception e) {
+            throw new MyException("Error al procesar solicitud en el controlador!");
+        }
     }
 
 }
