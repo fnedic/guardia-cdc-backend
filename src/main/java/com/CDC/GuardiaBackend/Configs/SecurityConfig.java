@@ -21,6 +21,7 @@ public class SecurityConfig {
     private static final String[] PUBLIC_URLS = {
             "/login",
             "/register",
+            "/protocol/mostviewed/{id}",
     };
 
     private static final String[] GET_URLS = {
@@ -32,18 +33,16 @@ public class SecurityConfig {
             "/protocol/list",
             "/protocol/view/{id}",
             "/protocol/mostviewed",
-            "/protocol/mostviewed/{id}",
             "/protocol/upload",
             "/protocol/delete/{id}",
     };
 
-    private final static String[] POST_URLS = {
+//     private final static String[] POST_URLS = {
 
-    };
+//     };
 
-    private static final String[] PUT_URLS = {
-
-    };
+//     private static final String[] PUT_URLS = {
+//     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
