@@ -1,56 +1,73 @@
 package com.CDC.GuardiaBackend.Services;
 
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import com.CDC.GuardiaBackend.Entities.User;
 import com.CDC.GuardiaBackend.Enums.Roles;
 import com.CDC.GuardiaBackend.Enums.UserStatus;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
+import com.CDC.GuardiaBackend.dtos.CredentialsDto;
+import com.CDC.GuardiaBackend.dtos.SignUpDto;
+import com.CDC.GuardiaBackend.dtos.UserDto;
+import com.CDC.GuardiaBackend.Exceptions.AppException;
 import com.CDC.GuardiaBackend.Exceptions.MyException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.CDC.GuardiaBackend.Mappers.UserMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService  {
 
     @Autowired
     private UserRepository userRepository;
 
-// ---- Service USER ------ (Se usara para crear, leer, modificar y borrar )
-    // CREATED
-    @Transactional
-    public void createUser(User user) throws MyException {
+    @Autowired
+    private UserMapper userMapper;
 
-        validateEmail(user);
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-        try {
+    // ---- Service USER ------ (Se usara para crear, leer, modificar y borrar )
+    // REGISTER
+    public UserDto register(SignUpDto userDto) {
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
 
-            user.setName(user.getName());
-            user.setLastname(user.getLastname());
-            user.setEmail(user.getEmail());
-            user.setPassword(user.getPassword());
-            user.setDNI(user.getDNI());
-            user.setMedicalRegistration(user.getMedicalRegistration());
-
-            user.setRole(Roles.USER);
-
-            user.setStatus(UserStatus.PENDING);
-
-            userRepository.save(user);
-
-        } catch (Exception e) {
-            throw new MyException("ERROR, Usuario no creado");
+        if (optionalUser.isPresent()) {
+            throw new AppException("Login already exists", HttpStatus.BAD_REQUEST);
         }
+
+        User user = userMapper.signUpToUser(userDto);
+        user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.getPassword())));
+        user.setDni(userDto.getDni());
+        user.setMedicalRegistration(userDto.getMedicalRegistration());
+        user.setRole(Roles.USER);
+        user.setStatus(UserStatus.PENDING);
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toUserDto(savedUser);
     }
 
-    //READ
+    //LOGIN
+    public UserDto login(CredentialsDto credentialsDto) {
+        User user = userRepository.findByEmail(credentialsDto.getEmail())
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+
+        if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.getPassword()), user.getPassword())) {
+            System.out.println("INICIO DE SESION CORRECTO");
+            return userMapper.toUserDto(user);
+        }
+        System.out.println("USUARIO O CONTRASEÑAS NO VALIDOS");
+        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+    }
+
+    // READ
     public User getById(String id) throws MyException {
 
         try {
@@ -84,7 +101,7 @@ public class UserService implements UserDetailsService {
 
     }
 
-    //UPDATE
+    // UPDATE
     public void updateStatus(User user) throws MyException {
         if (user.getStatus().name().equals("ACTIVE")) {
 
@@ -102,7 +119,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    //DELETE
+    // DELETE
     @Transactional
     public void deleteUser(String id) throws MyException {
         try {
@@ -115,7 +132,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    //VALIDATIONS
+    // VALIDATIONS
     @Transactional
     public boolean validateEmail(User user) throws MyException {
         try {
@@ -135,20 +152,9 @@ public class UserService implements UserDetailsService {
 
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.searchByEmail(email);
-        if (user != null) {
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            GrantedAuthority p = new SimpleGrantedAuthority("ROLE_" + user.getRole().toString());
-            authorities.add(p);
-
-            return new org.springframework.security.core.userdetails.User(
-                    user.getEmail(), user.getPassword(), authorities);
-        } else {
-            System.out.println("USUARIO NULO");
-            throw new UsernameNotFoundException("Usuario no encontrado");
-
-        }
+    public UserDto findByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        return userMapper.toUserDto(user);
     }
 }

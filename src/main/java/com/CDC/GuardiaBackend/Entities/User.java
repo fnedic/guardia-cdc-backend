@@ -23,7 +23,7 @@ public class User {
     private String lastname;
     private String email;
     private String password;
-    private String DNI;
+    private String dni;
     private String medicalRegistration;
 
     @Enumerated(EnumType.STRING)
