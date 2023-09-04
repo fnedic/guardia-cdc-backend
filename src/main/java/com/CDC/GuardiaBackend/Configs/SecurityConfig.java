@@ -22,6 +22,8 @@ public class SecurityConfig {
             "/login",
             "/register",
             "/protocol/mostviewed/{id}",
+            "/protocol/upload"
+
     };
 
     private static final String[] GET_URLS = {
@@ -33,16 +35,14 @@ public class SecurityConfig {
             "/protocol/list",
             "/protocol/view/{id}",
             "/protocol/mostviewed",
-            "/protocol/upload",
             "/protocol/delete/{id}",
     };
 
-//     private final static String[] POST_URLS = {
+    private final static String[] POST_URLS = {
+            "/cdc/user/{id}" };
 
-//     };
-
-//     private static final String[] PUT_URLS = {
-//     };
+    // private static final String[] PUT_URLS = {
+    // };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .antMatchers(HttpMethod.POST, PUBLIC_URLS).permitAll()
                         .antMatchers(HttpMethod.GET, GET_URLS).permitAll()
-                        .antMatchers(HttpMethod.PUT, "/cdc/user/{id}").permitAll()
+                        .antMatchers(HttpMethod.PUT, POST_URLS).permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
