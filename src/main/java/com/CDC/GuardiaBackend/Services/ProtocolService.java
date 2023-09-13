@@ -24,7 +24,6 @@ public class ProtocolService {
 
             if (!protocols.isEmpty()) {
                 Protocol maxViewsProtocol = Collections.max(protocols, Comparator.comparingInt(Protocol::getViews));
-                System.out.println("Protocolo con mas vistas --> " + maxViewsProtocol);
                 return maxViewsProtocol;
             } else {
                 System.out.println("Lista de protocolos vacía!");

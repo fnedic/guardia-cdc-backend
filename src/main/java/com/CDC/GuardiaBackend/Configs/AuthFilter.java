@@ -17,6 +17,7 @@ public class AuthFilter extends OncePerRequestFilter {
             javax.servlet.http.HttpServletRequest httpServletRequest,
             javax.servlet.http.HttpServletResponse httpServletResponse,
             javax.servlet.FilterChain filterChain) throws javax.servlet.ServletException, IOException {
+        
         String header = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header != null) {
