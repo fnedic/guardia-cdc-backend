@@ -1,47 +1,52 @@
 package com.CDC.GuardiaBackend.Controllers;
 
+import com.CDC.GuardiaBackend.Configs.UserAuthenticationProvider;
 import com.CDC.GuardiaBackend.Entities.User;
 import com.CDC.GuardiaBackend.Exceptions.MyException;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.CDC.GuardiaBackend.Services.UserService;
+import com.CDC.GuardiaBackend.dtos.UserDto;
 
 import java.util.List;
 import java.util.Optional;
 
-// import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-// @CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/cdc/")
+@RequestMapping("/cdc")
 public class UserController {
 
     @Autowired
     UserService userService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserAuthenticationProvider userAuthenticationProvider;
 
-    @GetMapping("user")
+    @GetMapping("/user")
     public List<User> getAllUser() {
         return userRepository.findAll();
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe el id: " + id));
-        return ResponseEntity.ok(user);
+    User user = userRepository.findById(id)
+    .orElseThrow(() -> new RuntimeException("No existe el id: " + id));
+    return ResponseEntity.ok(user);
     }
 
-    @PutMapping("user/{id}")
+    @PutMapping("/user/{id}")
     public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User updatedUser) {
 
         User existingUser = userRepository.findById(id)
@@ -62,7 +67,7 @@ public class UserController {
 
     }
 
-    @GetMapping("user/delete/{id}")
+    @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable String id) throws MyException {
 
         try {
@@ -77,6 +82,29 @@ public class UserController {
 
         } catch (Exception e) {
             throw new MyException("Error al procesar solicitud en el controlador!");
+        }
+    }
+
+    @GetMapping("/user/role")
+    public ResponseEntity<String> getRole(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            // Verificar si el encabezado de autorización está presente
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring(7);
+
+                UserDto user = userAuthenticationProvider.getUser(token);
+
+                String role = user.getRole().toString();
+                return ResponseEntity.ok(role);
+            } else {
+                // El encabezado de autorización no contiene un token JWT válido
+                // Devolver una respuesta de error
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("No Authorization Header or Invalid Token Format");
+            }
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir durante la validación del token
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 
