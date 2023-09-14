@@ -1,5 +1,6 @@
 package com.CDC.GuardiaBackend.Configs;
 
+import com.CDC.GuardiaBackend.Exceptions.MyException;
 import com.CDC.GuardiaBackend.Services.UserService;
 import com.CDC.GuardiaBackend.dtos.UserDto;
 import com.auth0.jwt.JWT;
@@ -47,29 +48,39 @@ public class UserAuthenticationProvider {
     }
 
     public Authentication validateToken(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
-        JWTVerifier verifier = JWT.require(algorithm)
-                .build();
+        if (token != null && !token.equals("null")) {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
-        DecodedJWT decoded = verifier.verify(token);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build();
 
-        UserDto user = userService.findByEmail(decoded.getSubject());
+            DecodedJWT decoded = verifier.verify(token);
 
-        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+            UserDto user = userService.findByEmail(decoded.getSubject());
+
+            return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+
+        } else
+            return null;
+
     }
 
-    public UserDto getUser(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+    public UserDto getUser(String token) throws MyException {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
-        JWTVerifier verifier = JWT.require(algorithm)
-                .build();
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build();
 
-        DecodedJWT decoded = verifier.verify(token);
+            DecodedJWT decoded = verifier.verify(token);
 
-        UserDto user = userService.findByEmail(decoded.getSubject());
-
-        return user;
+            UserDto user = userService.findByEmail(decoded.getSubject());
+            
+            return user;
+        } catch (Exception e) {
+            throw new MyException("Usuario no logueado o inexistente en la DB");
+        }
     }
 
 }

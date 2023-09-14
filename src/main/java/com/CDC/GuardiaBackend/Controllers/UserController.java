@@ -15,7 +15,6 @@ import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -86,25 +85,22 @@ public class UserController {
     }
 
     @GetMapping("/user/role")
-    public ResponseEntity<String> getRole(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<UserDto> getRole(@RequestHeader("Authorization") String authorizationHeader) throws MyException {
         try {
-            // Verificar si el encabezado de autorización está presente
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String token = authorizationHeader.substring(7);
 
-                UserDto user = userAuthenticationProvider.getUser(token);
+            String token = authorizationHeader.substring(7);
+            UserDto user = new UserDto();
+            if (authorizationHeader.length() >= 7 && authorizationHeader.startsWith("Bearer ")) {
 
-                String role = user.getRole().toString();
-                return ResponseEntity.ok(role);
+                UserDto userDto = userAuthenticationProvider.getUser(token);
+                user.setRole(userDto.getRole().toString());
+                user.setStatus(userDto.getStatus());
+                return ResponseEntity.ok(user);
             } else {
-                // El encabezado de autorización no contiene un token JWT válido
-                // Devolver una respuesta de error
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("No Authorization Header or Invalid Token Format");
+                return ResponseEntity.ok(null);
             }
         } catch (Exception e) {
-            // Manejar cualquier excepción que pueda ocurrir durante la validación del token
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw new MyException("CONTROLLER ERROR: Usuario no logueado o inexistente en la DB");
         }
     }
 

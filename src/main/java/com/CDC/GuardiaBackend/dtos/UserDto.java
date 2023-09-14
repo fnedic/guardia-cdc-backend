@@ -18,6 +18,7 @@ public class UserDto {
     private String dni;
     private String medicalRegistration;
     private String role;
+    private String status;
     private String token;
 
 }
