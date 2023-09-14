@@ -13,7 +13,7 @@ public class AuthFilter extends OncePerRequestFilter {
     private final UserAuthenticationProvider userAuthenticationProvider;
 
     @Override
-    protected void doFilterInternal(
+    protected void doFilterInternal (
             javax.servlet.http.HttpServletRequest httpServletRequest,
             javax.servlet.http.HttpServletResponse httpServletResponse,
             javax.servlet.FilterChain filterChain) throws javax.servlet.ServletException, IOException {
