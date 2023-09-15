@@ -89,13 +89,14 @@ public class UserController {
         try {
 
             String token = authorizationHeader.substring(7);
-            UserDto user = new UserDto();
             if (authorizationHeader.length() >= 7 && authorizationHeader.startsWith("Bearer ")) {
 
                 UserDto userDto = userAuthenticationProvider.getUser(token);
-                user.setRole(userDto.getRole().toString());
-                user.setStatus(userDto.getStatus());
-                return ResponseEntity.ok(user);
+
+                System.out.println("status: " + userDto.getStatus());
+                System.out.println("role: " + userDto.getRole());
+                
+                return ResponseEntity.ok(userDto);
             } else {
                 return ResponseEntity.ok(null);
             }
