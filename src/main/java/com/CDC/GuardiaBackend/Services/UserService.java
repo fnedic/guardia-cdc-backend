@@ -48,7 +48,7 @@ public class UserService  {
         user.setDni(userDto.getDni());
         user.setMedicalRegistration(userDto.getMedicalRegistration());
         user.setRole(Roles.USER);
-        user.setStatus(UserStatus.PENDING);
+        user.setStatus(UserStatus.INACTIVE);
         User savedUser = userRepository.save(user);
 
         return userMapper.toUserDto(savedUser);
@@ -57,14 +57,15 @@ public class UserService  {
     //LOGIN
     public UserDto login(CredentialsDto credentialsDto) {
         User user = userRepository.findByEmail(credentialsDto.getEmail())
-                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("Email no registrado", HttpStatus.NOT_FOUND));
 
+        if (!user.getStatus().toString().equals("ACTIVE")) {
+            throw new AppException("Aún no tiene permisos para iniciar sesión!", HttpStatus.FORBIDDEN);
+        }
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.getPassword()), user.getPassword())) {
-            System.out.println("INICIO DE SESION CORRECTO");
             return userMapper.toUserDto(user);
         }
-        System.out.println("USUARIO O CONTRASEÑAS NO VALIDOS");
-        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+        throw new AppException("Contraseña inválida", HttpStatus.UNAUTHORIZED);
     }
 
     // READ

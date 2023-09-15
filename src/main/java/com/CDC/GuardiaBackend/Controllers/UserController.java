@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -85,18 +86,15 @@ public class UserController {
     }
 
     @GetMapping("/user/role")
-    public ResponseEntity<UserDto> getRole(@RequestHeader("Authorization") String authorizationHeader) throws MyException {
+    public ResponseEntity<?> getRole(@RequestHeader("Authorization") String authorizationHeader) throws MyException {
         try {
 
             String token = authorizationHeader.substring(7);
             if (authorizationHeader.length() >= 7 && authorizationHeader.startsWith("Bearer ")) {
 
                 UserDto userDto = userAuthenticationProvider.getUser(token);
-
-                System.out.println("status: " + userDto.getStatus());
-                System.out.println("role: " + userDto.getRole());
                 
-                return ResponseEntity.ok(userDto);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(userDto);
             } else {
                 return ResponseEntity.ok(null);
             }
