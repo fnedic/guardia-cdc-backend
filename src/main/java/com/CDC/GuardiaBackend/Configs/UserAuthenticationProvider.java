@@ -35,13 +35,15 @@ public class UserAuthenticationProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String email) {
+    public String createToken(String email, String status, String role) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + 3600000); // 1 hour
+        Date validity = new Date(now.getTime() + 1800000); //30 minutos de sesión
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
                 .withSubject(email)
+                .withClaim("status", status) // Agregar la variable "status"
+                .withClaim("role", role) // Agregar la variable "role"
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
                 .sign(algorithm);
@@ -75,8 +77,11 @@ public class UserAuthenticationProvider {
 
             DecodedJWT decoded = verifier.verify(token);
 
-            UserDto user = userService.findByEmail(decoded.getSubject());
-            
+            UserDto user = new UserDto();
+
+            user.setStatus(decoded.getClaim("status").asString());
+            user.setRole(decoded.getClaim("role").asString());
+
             return user;
         } catch (Exception e) {
             throw new MyException("Usuario no logueado o inexistente en la DB");
