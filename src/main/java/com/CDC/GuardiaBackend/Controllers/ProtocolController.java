@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.CDC.GuardiaBackend.Entities.Protocol;
+import com.CDC.GuardiaBackend.Exceptions.AppException;
 import com.CDC.GuardiaBackend.Exceptions.MyException;
 import com.CDC.GuardiaBackend.Repositories.ProtocolRepository;
 import com.CDC.GuardiaBackend.Services.ProtocolService;
+import com.CDC.GuardiaBackend.Services.VideoService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -25,14 +28,20 @@ public class ProtocolController {
 
     @Autowired
     ProtocolService protocolService;
-
+    @Autowired
+    VideoService videoService;
     @Autowired
     ProtocolRepository protocolRepository;
 
     @PostMapping("/upload")
-    public Protocol createProtocol(@RequestBody Protocol protocol) {
+    public ResponseEntity<?> createProtocol(@RequestBody Protocol protocol) {
 
-        return protocolRepository.save(protocol);
+        try {
+            protocolService.create(protocol);
+            return new ResponseEntity<>("Contenido publicado correctamente!", HttpStatus.OK);
+        } catch (Exception e) {
+            throw new AppException(e.getMessage(), HttpStatus.BAD_GATEWAY);
+        }
     }
 
     @GetMapping("/view/{id}")
@@ -107,5 +116,4 @@ public class ProtocolController {
         }
     }
 
-    
 }
