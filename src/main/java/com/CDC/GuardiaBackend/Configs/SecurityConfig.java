@@ -35,10 +35,14 @@ public class SecurityConfig {
                         "/protocol/mostviewed",
                         "/protocol/delete/{id}",
                         "/protocol/mostviewed/{id}",
+
+                        "/video/get",
+                        "/video/delete/{id}"
         };
 
         private final static String[] POST_URLS = {
-                        "/protocol/upload"
+                        "/protocol/upload",
+                        "/video/register"
         };
 
         private static final String[] PUT_URLS = {
