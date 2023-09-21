@@ -37,7 +37,8 @@ public class SecurityConfig {
                         "/protocol/mostviewed/{id}",
 
                         "/video/get",
-                        "/video/delete/{id}"
+                        "/video/delete/{id}",
+                        "/video/update/{id}",
         };
 
         private final static String[] POST_URLS = {

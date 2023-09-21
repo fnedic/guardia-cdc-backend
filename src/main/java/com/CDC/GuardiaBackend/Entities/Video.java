@@ -19,10 +19,6 @@ public class Video {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     protected String id;
 
-    // @OneToOne
-    // @JoinColumn(name = "protocol_id")
-    // private Protocol protocolId;
-
     private String title;
     private String videoGroup;
     private String link;
