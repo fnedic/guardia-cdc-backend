@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,11 +53,32 @@ public class VideoController {
         }
     }
 
+    @GetMapping("/update/{id}")
+    public ResponseEntity<Video> getVideoById(@PathVariable String id) {
+        Video video = videoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No existe el id: " + id));
+        return ResponseEntity.status(HttpStatus.OK).body(video);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateVideo(@PathVariable String id, @RequestBody Video updatedVideo) {
+
+        Video existingVideo = videoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        existingVideo.setTitle(updatedVideo.getTitle());
+        existingVideo.setVideoGroup(updatedVideo.getVideoGroup());
+        existingVideo.setLink(updatedVideo.getLink());
+
+        videoRepository.save(existingVideo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+
+    }
+
     @GetMapping("/delete/{id}")
-    public String deleteProtocol(@PathVariable String id) throws MyException {
-
+    public String deleteVideo(@PathVariable String id) throws MyException {
         try {
-
             Optional<Video> optionalProtocol = videoRepository.findById(id);
             if (optionalProtocol.isPresent()) {
                 videoRepository.deleteById(id);
@@ -64,7 +86,6 @@ public class VideoController {
             } else {
                 throw new MyException("Video no encontrado");
             }
-
         } catch (Exception e) {
             throw new MyException("Error al procesar solicitud en el controlador!");
         }

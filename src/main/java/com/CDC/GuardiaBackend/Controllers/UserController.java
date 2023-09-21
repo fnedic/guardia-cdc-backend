@@ -41,9 +41,9 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
-    User user = userRepository.findById(id)
-    .orElseThrow(() -> new RuntimeException("No existe el id: " + id));
-    return ResponseEntity.ok(user);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No existe el id: " + id));
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/user/{id}")
@@ -93,7 +93,7 @@ public class UserController {
             if (authorizationHeader.length() >= 7 && authorizationHeader.startsWith("Bearer ")) {
 
                 UserDto userDto = userAuthenticationProvider.getUser(token);
-                
+
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(userDto);
             } else {
                 return ResponseEntity.ok(null);
