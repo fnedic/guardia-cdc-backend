@@ -24,7 +24,7 @@ public class ProtocolService {
     public void create(Protocol protocol) {
 
         try {
-            if (protocol.getVideoLink() != null) {
+            if (protocol.getVideoLink() != null && protocol.getVideoLink() != "") {
                 videoService.create(protocol.getTitle(), protocol.getVideoLink(), protocol.getPublicationDate(),
                         protocol.getProtocolGroup());
             }
