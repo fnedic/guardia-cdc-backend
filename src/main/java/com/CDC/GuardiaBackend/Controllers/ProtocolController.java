@@ -74,19 +74,6 @@ public class ProtocolController {
         return protocoList;
     }
 
-    @GetMapping("/procedures/list")
-    public List<Protocol> proceduresList() throws MyException {
-        
-        String criteria = "PROCEDIMIENTO";
-        List<Protocol> allProtocols = protocolRepository.findAll();
-
-        List<Protocol> proceduresList = allProtocols.stream()
-            .filter(protocol -> criteria.equals(protocol.getProtocolGroup()))
-            .collect(Collectors.toList());
-
-        return proceduresList;
-    }
-
     @GetMapping("/mostviewed")
     public ResponseEntity<Protocol> getMostViewed() throws MyException {
 
