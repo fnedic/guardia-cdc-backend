@@ -36,6 +36,8 @@ public class SecurityConfig {
                         "/protocol/delete/{id}",
                         "/protocol/mostviewed/{id}",
 
+                        "/protocol/procedures/list",
+
                         "/video/get",
                         "/video/delete/{id}",
                         "/video/update/{id}",

@@ -1,6 +1,7 @@
 package com.CDC.GuardiaBackend.Controllers;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,28 @@ public class ProtocolController {
 
     @GetMapping("/list")
     public List<Protocol> protocolList() throws MyException {
-        return protocolRepository.findAll();
+        
+        String criteria = "PROCEDIMIENTO";
+        List<Protocol> allProtocols = protocolRepository.findAll();
+
+        List<Protocol> protocoList = allProtocols.stream()
+            .filter(protocol -> !criteria.equals(protocol.getProtocolGroup()))
+            .collect(Collectors.toList());
+
+        return protocoList;
+    }
+
+    @GetMapping("/procedures/list")
+    public List<Protocol> proceduresList() throws MyException {
+        
+        String criteria = "PROCEDIMIENTO";
+        List<Protocol> allProtocols = protocolRepository.findAll();
+
+        List<Protocol> proceduresList = allProtocols.stream()
+            .filter(protocol -> criteria.equals(protocol.getProtocolGroup()))
+            .collect(Collectors.toList());
+
+        return proceduresList;
     }
 
     @GetMapping("/mostviewed")
