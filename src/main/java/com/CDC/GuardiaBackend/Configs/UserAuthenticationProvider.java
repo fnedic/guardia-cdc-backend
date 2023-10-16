@@ -88,4 +88,21 @@ public class UserAuthenticationProvider {
         }
     }
 
+    public String getUserEmail(String token) throws MyException {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build();
+
+            DecodedJWT decoded = verifier.verify(token);
+
+            String email = decoded.getSubject();
+
+            return email;
+        } catch (Exception e) {
+            throw new MyException("(getUserEmail) Usuario no logueado o inexistente en la DB");
+        }
+    }
+
 }

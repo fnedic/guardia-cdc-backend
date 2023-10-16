@@ -28,7 +28,8 @@ public class SecurityConfig {
                         "/cdc/user",
                         "/cdc/user/{id}",
                         "/cdc/user/delete/{id}",
-                        "/cdc/user/role", 
+                        "/cdc/user/role",
+                        "/cdc/user/profile", 
 
                         "/protocol/list",
                         "/protocol/view/{id}",

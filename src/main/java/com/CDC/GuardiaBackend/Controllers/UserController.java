@@ -2,6 +2,7 @@ package com.CDC.GuardiaBackend.Controllers;
 
 import com.CDC.GuardiaBackend.Configs.UserAuthenticationProvider;
 import com.CDC.GuardiaBackend.Entities.User;
+import com.CDC.GuardiaBackend.Exceptions.AppException;
 import com.CDC.GuardiaBackend.Exceptions.MyException;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,9 @@ public class UserController {
         existingUser.setDni(updatedUser.getDni());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setMedicalRegistration(updatedUser.getMedicalRegistration());
-        existingUser.setStatus(updatedUser.getStatus());
+        if (updatedUser.getStatus().toString().equals("ACTIVE") || updatedUser.getStatus().toString().equals("INACTIVE")) {
+            existingUser.setStatus(updatedUser.getStatus());
+        }
 
         // Guardar el usuario actualizado en la base de datos
         User savedUser = userRepository.save(existingUser);
@@ -97,6 +100,46 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(userDto);
             } else {
                 return ResponseEntity.ok(null);
+            }
+        } catch (Exception e) {
+            throw new MyException("CONTROLLER ERROR: Usuario no logueado o inexistente en la DB");
+        }
+    }
+
+    @GetMapping("/user/profile")
+    public ResponseEntity<?> getUser(@RequestHeader("Authorization") String authorizationHeader) throws MyException {
+        try {
+
+            String token = authorizationHeader.substring(7);
+            if (authorizationHeader.length() >= 7 && authorizationHeader.startsWith("Bearer ")) {
+
+                String email = userAuthenticationProvider.getUserEmail(token);
+
+                try {
+                    
+                    Optional<User> optional = userRepository.findByEmail(email);
+                    
+                    if (optional.isPresent()) {
+                        
+                        User user = new User();
+
+                        user.setEmail(optional.get().getEmail());
+                        user.setDni(optional.get().getDni());
+                        user.setName(optional.get().getName());
+                        user.setLastname(optional.get().getLastname());
+                        user.setMedicalRegistration(optional.get().getMedicalRegistration());
+                        user.setId(optional.get().getId());
+                        user.setStatus(optional.get().getStatus());
+
+                        return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
+                    } else {
+                        throw new AppException("Usuario no encontrado", HttpStatus.BAD_REQUEST);
+                    }
+                } catch (Exception e) {
+                    throw new AppException("Usuario no encontrado", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                throw new AppException("Usuario no encontrado", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             throw new MyException("CONTROLLER ERROR: Usuario no logueado o inexistente en la DB");
