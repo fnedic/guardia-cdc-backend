@@ -81,6 +81,7 @@ public class UserAuthenticationProvider {
 
             user.setStatus(decoded.getClaim("status").asString());
             user.setRole(decoded.getClaim("role").asString());
+            user.setEmail(decoded.getSubject());
 
             return user;
         } catch (Exception e) {

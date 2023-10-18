@@ -26,7 +26,7 @@ public class SecurityConfig {
         private static final String[] GET_URLS = {
 
                         "/cdc/user",
-                        "/cdc/user/{id}",
+                        "/cdc/user/profile",
                         "/cdc/user/delete/{id}",
                         "/cdc/user/role",
                         "/cdc/user/profile", 
