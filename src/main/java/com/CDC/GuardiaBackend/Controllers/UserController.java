@@ -40,13 +40,6 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe el id: " + id));
-        return ResponseEntity.ok(user);
-    }
-
     @PutMapping("/user/{id}")
     public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User updatedUser) {
 
@@ -59,7 +52,8 @@ public class UserController {
         existingUser.setDni(updatedUser.getDni());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setMedicalRegistration(updatedUser.getMedicalRegistration());
-        if (updatedUser.getStatus().toString().equals("ACTIVE") || updatedUser.getStatus().toString().equals("INACTIVE")) {
+        if (updatedUser.getStatus().toString().equals("ACTIVE")
+                || updatedUser.getStatus().toString().equals("INACTIVE")) {
             existingUser.setStatus(updatedUser.getStatus());
         }
 
@@ -116,11 +110,11 @@ public class UserController {
                 String email = userAuthenticationProvider.getUserEmail(token);
 
                 try {
-                    
+
                     Optional<User> optional = userRepository.findByEmail(email);
-                    
+
                     if (optional.isPresent()) {
-                        
+
                         User user = new User();
 
                         user.setEmail(optional.get().getEmail());
