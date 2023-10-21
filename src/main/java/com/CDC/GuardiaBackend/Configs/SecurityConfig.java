@@ -26,6 +26,7 @@ public class SecurityConfig {
         private static final String[] GET_URLS = {
 
                         "/cdc/user",
+                        "/cdc/user/{id}",
                         "/cdc/user/profile",
                         "/cdc/user/delete/{id}",
                         "/cdc/user/role",
@@ -43,11 +44,14 @@ public class SecurityConfig {
                         "/video/get",
                         "/video/delete/{id}",
                         "/video/update/{id}",
+
+                        "/notice/get",
         };
 
         private final static String[] POST_URLS = {
                         "/protocol/upload",
-                        "/video/register"
+                        "/video/register",
+                        "/notice/create",
         };
 
         private static final String[] PUT_URLS = {
