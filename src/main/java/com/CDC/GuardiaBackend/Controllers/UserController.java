@@ -7,6 +7,7 @@ import com.CDC.GuardiaBackend.Exceptions.MyException;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.CDC.GuardiaBackend.Services.UserService;
 import com.CDC.GuardiaBackend.dtos.UserDto;
 
@@ -38,6 +39,35 @@ public class UserController {
     @GetMapping("/user")
     public List<User> getAllUser() {
         return userRepository.findAll();
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserToEdit(@PathVariable String id) throws MyException {
+
+        try {
+
+            Optional<User> optional = userRepository.findById(id);
+
+            if (optional.isPresent()) {
+
+                User user = new User();
+
+                user.setEmail(optional.get().getEmail());
+                user.setDni(optional.get().getDni());
+                user.setName(optional.get().getName());
+                user.setLastname(optional.get().getLastname());
+                user.setMedicalRegistration(optional.get().getMedicalRegistration());
+                user.setId(optional.get().getId());
+                user.setStatus(optional.get().getStatus());
+
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
+            } else {
+                throw new AppException("Usuario no encontrado", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            throw new AppException("Usuario no encontrado", HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PutMapping("/user/{id}")
