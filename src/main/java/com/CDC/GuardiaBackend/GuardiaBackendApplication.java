@@ -8,7 +8,6 @@ public class GuardiaBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GuardiaBackendApplication.class, args);
-                System.out.println("Hola desde el main");
 	}
 
 }
