@@ -97,7 +97,6 @@ public class ProtocolController {
             if (optionalProtocol.isPresent()) {
                 Protocol protocol = optionalProtocol.get();
                 protocol.setViews(optionalProtocol.get().getViews() + 1);
-                System.out.println("             +1            ");
                 protocolRepository.save(protocol);
             }
 
