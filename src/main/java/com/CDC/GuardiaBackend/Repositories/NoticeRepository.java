@@ -7,5 +7,5 @@ import com.CDC.GuardiaBackend.Entities.Notice;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, String>{
-    
+
 }

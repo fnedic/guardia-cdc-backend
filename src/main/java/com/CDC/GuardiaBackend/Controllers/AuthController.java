@@ -1,8 +1,5 @@
 package com.CDC.GuardiaBackend.Controllers;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +14,9 @@ import com.CDC.GuardiaBackend.Services.UserService;
 import com.CDC.GuardiaBackend.dtos.CredentialsDto;
 import com.CDC.GuardiaBackend.dtos.SignUpDto;
 import com.CDC.GuardiaBackend.dtos.UserDto;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController

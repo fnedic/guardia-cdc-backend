@@ -1,8 +1,8 @@
 package com.CDC.GuardiaBackend.Controllers;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,7 +63,7 @@ public class ProtocolController {
 
     @GetMapping("/list")
     public List<Protocol> protocolList() throws MyException {
-        
+
         String criteria = "PROCEDIMIENTO";
         List<Protocol> allProtocols = protocolRepository.findAll();
 

@@ -19,13 +19,13 @@ import com.CDC.GuardiaBackend.Repositories.ProtocolRepository;
 @RestController
 @RequestMapping("/procedure")
 public class ProcedureController {
-    
+
     @Autowired
     ProtocolRepository protocolRepository;
 
     @GetMapping("/list")
     public List<Protocol> proceduresList() throws MyException {
-        
+
         String criteria = "PROCEDIMIENTO";
         List<Protocol> allProtocols = protocolRepository.findAll();
 
