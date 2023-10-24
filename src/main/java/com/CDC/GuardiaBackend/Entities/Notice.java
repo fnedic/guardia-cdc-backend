@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 public class Notice {
-    
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

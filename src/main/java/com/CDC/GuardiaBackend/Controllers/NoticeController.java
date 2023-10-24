@@ -41,7 +41,7 @@ public class NoticeController {
         try {
             Notice optionalNotice = noticeRepository.findById("55af7770-f99a-4dfc-ae69-a4957e21bc60")
                    .orElseThrow(() -> new RuntimeException("Aviso no encontrado"));
-            return new ResponseEntity<Notice>(optionalNotice, HttpStatus.OK);
+            return new ResponseEntity<>(optionalNotice, HttpStatus.OK);
         } catch (Exception e) {
             throw new AppException(e.getMessage(), HttpStatus.BAD_GATEWAY);
         }

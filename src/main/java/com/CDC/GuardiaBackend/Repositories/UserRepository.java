@@ -1,7 +1,5 @@
 package com.CDC.GuardiaBackend.Repositories;
 
-import com.CDC.GuardiaBackend.Entities.User;
-import com.CDC.GuardiaBackend.Enums.Roles;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,11 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.CDC.GuardiaBackend.Entities.User;
+import com.CDC.GuardiaBackend.Enums.Roles;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, String>{
 
     Optional <User> findByEmail(String email);
-    
+
     @Query("SELECT u FROM User u WHERE u.email = :email")
     User searchByEmail(@Param("email") String email);
 
@@ -26,5 +27,5 @@ public interface UserRepository extends JpaRepository<User, String>{
 
     @Query("SELECT u FROM User u WHERE u.lastname = :lastname")
     List<User> findByNameAndLastName(@Param("lastname") String lastname);
-    
+
 }

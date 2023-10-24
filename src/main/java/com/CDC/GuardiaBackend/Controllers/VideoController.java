@@ -25,7 +25,7 @@ import com.CDC.GuardiaBackend.Services.VideoService;
 @RestController
 @RequestMapping("/video")
 public class VideoController {
-    
+
     @Autowired
     VideoRepository videoRepository;
     @Autowired
@@ -37,7 +37,7 @@ public class VideoController {
     public ResponseEntity<List<Video>> getAll() {
         List<Video> videosList = videoRepository.findAll();
         if (!videosList.isEmpty()) {
-            return new ResponseEntity<List<Video>>(videosList, HttpStatus.OK);
+            return new ResponseEntity<>(videosList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -90,5 +90,5 @@ public class VideoController {
             throw new MyException("Error al procesar solicitud en el controlador!");
         }
     }
-    
+
 }
