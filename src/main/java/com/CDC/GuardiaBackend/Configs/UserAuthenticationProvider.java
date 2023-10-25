@@ -24,10 +24,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class UserAuthenticationProvider {
-
-    @Value("${security.jwt.token.secret-key:secret-key}")
+    
+    @Value("${SECRET_KEY:secret-key}")
     private String secretKey;
-
+    
     private final UserService userService;
 
     @PostConstruct

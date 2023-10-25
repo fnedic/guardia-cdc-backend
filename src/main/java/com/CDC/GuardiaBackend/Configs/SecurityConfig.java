@@ -74,7 +74,9 @@ public class SecurityConfig {
                                                 .antMatchers(HttpMethod.POST, POST_URLS).authenticated()
                                                 .antMatchers(HttpMethod.GET, GET_URLS).authenticated()
                                                 .antMatchers(HttpMethod.PUT, PUT_URLS).authenticated()
-                                                .anyRequest().authenticated());
+                                                .anyRequest().authenticated())
+                                .httpBasic().disable()
+                                .formLogin().disable();
                 return http.build();
         }
 }
