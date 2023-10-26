@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,7 +14,6 @@ import com.CDC.GuardiaBackend.Services.ProtocolService;
 import com.CDC.GuardiaBackend.Services.UserService;
 
 
-@CrossOrigin(origins = "http://localhost:3000")
 @Controller
 @RequestMapping("/admin/")
 public class AdminController {
