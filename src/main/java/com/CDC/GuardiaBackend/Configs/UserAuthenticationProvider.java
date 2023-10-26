@@ -25,9 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class UserAuthenticationProvider {
     
-    @Value("${SECRET_KEY}")
-    private String secretKey;
-    
+    private static String secretKey = System.getenv("SECRET_KEY");
     private final UserService userService;
 
     @PostConstruct
