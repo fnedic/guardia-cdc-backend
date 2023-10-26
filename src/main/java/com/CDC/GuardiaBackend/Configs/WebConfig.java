@@ -19,22 +19,13 @@ public class WebConfig {
 
     private static final Long MAX_AGE = 3600L;
     private static final int CORS_FILTER_ORDER = -102;
-    private static final String allowedOrigin = System.getenv("GUARDIA_CDC_FRONTEND_HOST");
 
+    @Value("${GUARDIA_CDC_FRONTEND_HOST}")
+    private String allowedOrigin;
 
     @Bean
     public FilterRegistrationBean<?> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = getCorsConfiguration();
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean<?> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-
-        // should be set order to -100 because we need to CorsFilter before SpringSecurityFilter
-        bean.setOrder(CORS_FILTER_ORDER);
-        return bean;
-    }
-
-    private CorsConfiguration getCorsConfiguration() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin(allowedOrigin);
@@ -48,6 +39,11 @@ public class WebConfig {
                 HttpMethod.PUT.name(),
                 HttpMethod.DELETE.name()));
         config.setMaxAge(MAX_AGE);
-        return config;
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<?> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+
+        // should be set order to -100 because we need to CorsFilter before SpringSecurityFilter
+        bean.setOrder(CORS_FILTER_ORDER);
+        return bean;
     }
 }
