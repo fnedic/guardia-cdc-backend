@@ -19,10 +19,9 @@ public class WebConfig {
 
     private static final Long MAX_AGE = 3600L;
     private static final int CORS_FILTER_ORDER = -102;
+    private static final String allowedOrigin = System.getenv("GUARDIA_CDC_FRONTEND_HOST");
 
-    @Value("${GUARDIA_CDC_FRONTEND_HOST}")
-    private String allowedOrigin;
-    
+
     @Bean
     public FilterRegistrationBean<?> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
