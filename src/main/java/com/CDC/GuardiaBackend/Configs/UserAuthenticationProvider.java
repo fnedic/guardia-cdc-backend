@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class UserAuthenticationProvider {
     
-    @Value("${SECRET_KEY:secret-key}")
+    @Value("${SECRET_KEY}")
     private String secretKey;
     
     private final UserService userService;
@@ -99,9 +99,7 @@ public class UserAuthenticationProvider {
 
             DecodedJWT decoded = verifier.verify(token);
 
-            String email = decoded.getSubject();
-
-            return email;
+            return decoded.getSubject();
         } catch (Exception e) {
             throw new MyException("(getUserEmail) Usuario no logueado o inexistente en la DB");
         }
