@@ -24,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class UserAuthenticationProvider {
-    
-    @Value("${SECRET_KEY:default-value}")
+
+    @Value("${SECRET_KEY}")
     private String secretKey;
 
     private final UserService userService;
