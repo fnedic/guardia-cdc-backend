@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +20,10 @@ import com.CDC.GuardiaBackend.Exceptions.MyException;
 import com.CDC.GuardiaBackend.Repositories.VideoRepository;
 import com.CDC.GuardiaBackend.Services.VideoService;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/video")
 public class VideoController {
-    
+
     @Autowired
     VideoRepository videoRepository;
     @Autowired
@@ -37,7 +35,7 @@ public class VideoController {
     public ResponseEntity<List<Video>> getAll() {
         List<Video> videosList = videoRepository.findAll();
         if (!videosList.isEmpty()) {
-            return new ResponseEntity<List<Video>>(videosList, HttpStatus.OK);
+            return new ResponseEntity<>(videosList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -90,5 +88,5 @@ public class VideoController {
             throw new MyException("Error al procesar solicitud en el controlador!");
         }
     }
-    
+
 }

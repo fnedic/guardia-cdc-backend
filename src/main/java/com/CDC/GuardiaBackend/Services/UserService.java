@@ -6,21 +6,22 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.CDC.GuardiaBackend.Entities.User;
 import com.CDC.GuardiaBackend.Enums.Roles;
 import com.CDC.GuardiaBackend.Enums.UserStatus;
+import com.CDC.GuardiaBackend.Exceptions.AppException;
+import com.CDC.GuardiaBackend.Exceptions.MyException;
+import com.CDC.GuardiaBackend.Mappers.UserMapper;
 import com.CDC.GuardiaBackend.Repositories.UserRepository;
 import com.CDC.GuardiaBackend.dtos.CredentialsDto;
 import com.CDC.GuardiaBackend.dtos.SignUpDto;
 import com.CDC.GuardiaBackend.dtos.UserDto;
-import com.CDC.GuardiaBackend.Exceptions.AppException;
-import com.CDC.GuardiaBackend.Exceptions.MyException;
-import com.CDC.GuardiaBackend.Mappers.UserMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService  {

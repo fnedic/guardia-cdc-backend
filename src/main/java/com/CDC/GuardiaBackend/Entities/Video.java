@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 public class Video {
-    
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

@@ -1,15 +1,17 @@
 package com.CDC.GuardiaBackend.Configs;
 
-import com.CDC.GuardiaBackend.dtos.ErrorDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import com.CDC.GuardiaBackend.dtos.ErrorDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {

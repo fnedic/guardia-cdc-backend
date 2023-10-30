@@ -1,6 +1,5 @@
 package com.CDC.GuardiaBackend.Configs;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Configuration
@@ -30,7 +31,7 @@ public class SecurityConfig {
                         "/cdc/user/profile",
                         "/cdc/user/delete/{id}",
                         "/cdc/user/role",
-                        "/cdc/user/profile", 
+                        "/cdc/user/profile",
 
                         "/protocol/list",
                         "/protocol/view/{id}",
@@ -73,7 +74,9 @@ public class SecurityConfig {
                                                 .antMatchers(HttpMethod.POST, POST_URLS).authenticated()
                                                 .antMatchers(HttpMethod.GET, GET_URLS).authenticated()
                                                 .antMatchers(HttpMethod.PUT, PUT_URLS).authenticated()
-                                                .anyRequest().authenticated());
+                                                .anyRequest().authenticated())
+                                .httpBasic().disable()
+                                .formLogin().disable();
                 return http.build();
         }
 }
