@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.CDC.GuardiaBackend.Enums.Specialties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +51,8 @@ public class UserService  {
         user.setMedicalRegistration(userDto.getMedicalRegistration());
         user.setRole(Roles.USER);
         user.setStatus(UserStatus.INACTIVE);
+        user.setSpecialtie(Specialties.valueOf(userDto.getSpecialtie()));
+        user.setStartDate(userDto.getStartDate());
         User savedUser = userRepository.save(user);
 
         return userMapper.toUserDto(savedUser);
