@@ -38,7 +38,12 @@ public class UserAuthenticationProvider {
 
     public String createToken(String email, String status, String role) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + 2200000); // tiempo en milisegundos
+        Date validity;
+        if (role.toString() == "ADMIN") {
+            validity = new Date(now.getTime() + 5400000); // tiempo en milisegundos
+        } else {
+            validity = new Date(now.getTime() + 2700000);
+        };
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()

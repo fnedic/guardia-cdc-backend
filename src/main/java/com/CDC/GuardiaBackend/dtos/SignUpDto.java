@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +28,12 @@ public class SignUpDto {
 
     @NotEmpty
     private String medicalRegistration;
+
+    @NotEmpty
+    private String specialtie;
+
+    @NotEmpty
+    private Date startDate;
 
     @NotEmpty
     private char[] password;
