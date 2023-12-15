@@ -36,7 +36,7 @@ public class UserAuthenticationProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String email, String status, String role) {
+    public String createToken(String email, String status, String role, String id) {
         Date now = new Date();
         Date validity;
         if (role.toString() == "ADMIN") {
@@ -47,7 +47,7 @@ public class UserAuthenticationProvider {
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
-                .withSubject(email)
+                .withSubject(id)
                 .withClaim("status", status) // Agregar la variable "status"
                 .withClaim("role", role) // Agregar la variable "role"
                 .withIssuedAt(now)
@@ -65,7 +65,7 @@ public class UserAuthenticationProvider {
 
             DecodedJWT decoded = verifier.verify(token);
 
-            UserDto user = userService.findByEmail(decoded.getSubject());
+            UserDto user = userService.findByID(decoded.getSubject());
 
             return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
 
@@ -87,26 +87,11 @@ public class UserAuthenticationProvider {
 
             user.setStatus(decoded.getClaim("status").asString());
             user.setRole(decoded.getClaim("role").asString());
-            user.setEmail(decoded.getSubject());
+            user.setId(decoded.getSubject());
 
             return user;
         } catch (Exception e) {
             throw new MyException("Usuario no logueado o inexistente en la DB");
-        }
-    }
-
-    public String getUserEmail(String token) throws MyException {
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
-
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .build();
-
-            DecodedJWT decoded = verifier.verify(token);
-
-            return decoded.getSubject();
-        } catch (Exception e) {
-            throw new MyException("(getUserEmail) Usuario no logueado o inexistente en la DB");
         }
     }
 

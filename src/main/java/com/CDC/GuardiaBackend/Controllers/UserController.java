@@ -36,7 +36,8 @@ public class UserController {
 
     @GetMapping("/user")
     public List<User> getAllUser() {
-        return userRepository.findByRole(Roles.USER);
+
+        return userRepository.findByRoleOrderByLastname(Roles.USER);
     }
 
     @GetMapping("/user/{id}")
@@ -139,11 +140,11 @@ public class UserController {
             String token = authorizationHeader.substring(7);
             if (authorizationHeader.length() >= 7 && authorizationHeader.startsWith("Bearer ")) {
 
-                String email = userAuthenticationProvider.getUserEmail(token);
+                String id = userAuthenticationProvider.getUser(token).getId();
 
                 try {
 
-                    Optional<User> optional = userRepository.findByEmail(email);
+                    Optional<User> optional = userRepository.findById(id);
 
                     if (optional.isPresent()) {
 
