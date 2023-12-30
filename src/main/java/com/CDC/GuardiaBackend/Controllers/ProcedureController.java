@@ -1,6 +1,8 @@
 package com.CDC.GuardiaBackend.Controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,17 +24,30 @@ public class ProcedureController {
     ProtocolRepository protocolRepository;
 
     @GetMapping("/list")
-    public List<Protocol> proceduresList() throws MyException {
+    public List<Map<String, Object>> proceduresList() throws MyException {
 
         String criteria = "PROCEDIMIENTO";
         List<Protocol> allProtocols = protocolRepository.findAll();
 
-        List<Protocol> proceduresList = allProtocols.stream()
-            .filter(protocol -> criteria.equals(protocol.getProtocolGroup()))
-            .collect(Collectors.toList());
+        List<Map<String, Object>> proceduresList = allProtocols.stream()
+                .filter(protocol -> criteria.equals(protocol.getProtocolGroup()))
+                .map(protocol -> {
+                    Map<String, Object> procedureMap = new HashMap<>();
+                    procedureMap.put("id", protocol.getId());
+                    procedureMap.put("title", protocol.getTitle());
+                    procedureMap.put("intro", protocol.getIntro());
+                    procedureMap.put("protocolGroup", protocol.getProtocolGroup());
+                    procedureMap.put("publicationDate", protocol.getPublicationDate());
+                    procedureMap.put("views", protocol.getViews());
+                    procedureMap.put("videoLink", protocol.getVideoLink());
+
+                    return procedureMap;
+                })
+                .collect(Collectors.toList());
 
         return proceduresList;
     }
+
 
     @GetMapping("/delete/{id}")
     public String deleteProcedure(@PathVariable String id) throws MyException {
