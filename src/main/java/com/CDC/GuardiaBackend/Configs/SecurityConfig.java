@@ -55,6 +55,9 @@ public class SecurityConfig {
             "/calendar/req-change/{id}",
             "/calendar/req-cancel/{id}",
             "/calendar/req-accept/{id}",
+            "/calendar/req-approve/{id}",
+            "/calendar/req-change-cancel/{id}",
+            "/calendar/get-changed-events"
     };
 
     private final static String[] POST_URLS = {

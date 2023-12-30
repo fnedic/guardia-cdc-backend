@@ -117,18 +117,23 @@ public class CalendarController {
     }
 
     @GetMapping("/get-user-events")
-    public ResponseEntity<?> getUserEvents(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> getUserEvents(@RequestParam(name = "start") String start, @RequestParam(name = "end") String end, @RequestHeader("Authorization") String authHeader) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT-3"));
 
         try {
-            List<Event> userEvents = eventRepository.findByUserId(calendarService.getUserId(authHeader));
-            userEvents.removeIf(event -> event.getEventStatus().toString().equals("CREATED") || event.getEventStatus().toString().equals("REQUESTED"));
-            return ResponseEntity.ok(userEvents);
+            Date startDate = sdf.parse(start);
+            Date endDate = sdf.parse(end);
+            List<Event> userEvents = eventRepository.findByStartDateBetween(startDate,endDate);
+            userEvents.removeIf(event -> event.getEventStatus().toString().equals("CREATED") || event.getEventStatus().toString().equals("REQUESTED") || event.getEventStatus().toString().equals("CHANGED"));
+            List<Event> filteredEvents = userEvents.stream()
+                    .filter(event -> event.getUserId().equals(calendarService.getUserId(authHeader)))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(filteredEvents);
         } catch (Exception e) {
             throw new AppException(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    ;
 
     @GetMapping("/get-requested-events")
     public ResponseEntity<?> getUserRequestedEvents(@RequestHeader("Authorization") String authHeader) {
@@ -189,10 +194,30 @@ public class CalendarController {
     }
 
     @GetMapping("/req-accept/{id}")
-    public ResponseEntity<?> requestAccept(@RequestHeader("Authorization") String authHeader, @PathVariable String id) {
+    public ResponseEntity<?> requestChange(@RequestHeader("Authorization") String authHeader, @PathVariable String id) {
         try {
-            calendarService.requestAccept(authHeader, id);
-            return new ResponseEntity<>("Cambio aceptado correctamente!", HttpStatus.OK);
+            calendarService.requestChange(authHeader, id);
+            return new ResponseEntity<>("Cambio aceptado correctamente, espere autorización del administrador", HttpStatus.OK);
+        } catch (Exception e) {
+            throw new AppException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/req-approve/{id}")
+    public ResponseEntity<?> requestAccept(@PathVariable String id) {
+        try {
+            calendarService.requestAccept(id);
+            return new ResponseEntity<>("Cambio aceptado correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            throw new AppException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/req-change-cancel/{id}")
+    public ResponseEntity<?> requestChangeCancel(@PathVariable String id) {
+        try {
+            calendarService.requestChangeCancel(id);
+            return new ResponseEntity<>("Cambio cancelado correctamente", HttpStatus.OK);
         } catch (Exception e) {
             throw new AppException(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -213,5 +238,15 @@ public class CalendarController {
             throw new AppException("Error al borrar evento.", HttpStatus.BAD_REQUEST);
         }
         return null;
+    }
+
+    @GetMapping("/get-changed-events")
+    public ResponseEntity<?> getChangedEvents(){
+        List<Event> events = eventRepository.findByEventStatus(EventStatus.CHANGED);
+        if (!events.isEmpty()) {
+            return ResponseEntity.ok(events);
+        } else {
+            return null;
+        }
     }
 }

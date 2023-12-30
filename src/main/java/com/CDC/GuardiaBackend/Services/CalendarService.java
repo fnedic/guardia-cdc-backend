@@ -97,7 +97,7 @@ public class CalendarService {
         }
     }
 
-    public void requestAccept (String authHeader, String id) {
+    public void requestChange (String authHeader, String id) {
         try {
             Optional<User> optionalUser = userRepository.findById(getUserId(authHeader));
             Optional<Event> optionalEvent = eventRepository.findById(id);
@@ -113,6 +113,36 @@ public class CalendarService {
             }
         } catch (Exception e) {
             throw new AppException("Error al tomar cambio de guardia.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public void requestAccept (String id) {
+        try {
+            Optional<Event> optionalEvent = eventRepository.findById(id);
+            if (optionalEvent.isPresent()) {
+                Event toChangeEvent = optionalEvent.get();
+                toChangeEvent.setEventStatus(EventStatus.APPROVED);
+                eventRepository.save(toChangeEvent);
+            }
+        } catch (Exception e) {
+            throw new AppException("Error al validar cambio de guardia.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public void requestChangeCancel (String id) {
+        try {
+            Optional<Event> optionalEvent = eventRepository.findById(id);
+            if (optionalEvent.isPresent()) {
+                Event toChangeEvent = optionalEvent.get();
+                toChangeEvent.setTitle(toChangeEvent.getOldOwnerTitle());
+                toChangeEvent.setUserId(toChangeEvent.getOldOwnerId());
+                toChangeEvent.setOldOwnerTitle(null);
+                toChangeEvent.setOldOwnerId(null);
+                toChangeEvent.setEventStatus(EventStatus.ASSIGNED);
+                eventRepository.save(toChangeEvent);
+            }
+        } catch (Exception e) {
+            throw new AppException("Error al cancelar cambio de guardia.", HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -4,5 +4,6 @@ public enum EventStatus {
     ASSIGNED,
     REQUESTED,
     CHANGED,
-    CREATED
+    CREATED,
+    APPROVED,
 }
