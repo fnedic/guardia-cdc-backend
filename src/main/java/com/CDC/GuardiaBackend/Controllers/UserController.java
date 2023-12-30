@@ -3,6 +3,7 @@ package com.CDC.GuardiaBackend.Controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.CDC.GuardiaBackend.Enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class UserController {
 
     @GetMapping("/user")
     public List<User> getAllUser() {
-        return userRepository.findAll();
+        return userRepository.findByRole(Roles.USER);
     }
 
     @GetMapping("/user/{id}")
@@ -56,6 +57,8 @@ public class UserController {
                 user.setMedicalRegistration(optional.get().getMedicalRegistration());
                 user.setId(optional.get().getId());
                 user.setStatus(optional.get().getStatus());
+                user.setStartDate(optional.get().getStartDate());
+                user.setSpecialtie(optional.get().getSpecialtie());
 
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
             } else {
@@ -79,6 +82,8 @@ public class UserController {
         existingUser.setDni(updatedUser.getDni());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setMedicalRegistration(updatedUser.getMedicalRegistration());
+        existingUser.setSpecialtie(updatedUser.getSpecialtie());
+        existingUser.setStartDate(updatedUser.getStartDate());
         if (updatedUser.getStatus().toString().equals("ACTIVE")
                 || updatedUser.getStatus().toString().equals("INACTIVE")) {
             existingUser.setStatus(updatedUser.getStatus());
@@ -151,6 +156,8 @@ public class UserController {
                         user.setMedicalRegistration(optional.get().getMedicalRegistration());
                         user.setId(optional.get().getId());
                         user.setStatus(optional.get().getStatus());
+                        user.setSpecialtie(optional.get().getSpecialtie());
+                        user.setStartDate(optional.get().getStartDate());
 
                         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
                     } else {
