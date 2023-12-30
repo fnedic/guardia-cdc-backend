@@ -1,6 +1,8 @@
 package com.CDC.GuardiaBackend.Controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -60,17 +62,30 @@ public class ProtocolController {
     }
 
     @GetMapping("/list")
-    public List<Protocol> protocolList() throws MyException {
+    public List<Map<String, Object>> protocolList() throws MyException {
 
         String criteria = "PROCEDIMIENTO";
         List<Protocol> allProtocols = protocolRepository.findAll();
 
-        List<Protocol> protocoList = allProtocols.stream()
-            .filter(protocol -> !criteria.equals(protocol.getProtocolGroup()))
-            .collect(Collectors.toList());
+        List<Map<String, Object>> protocolList = allProtocols.stream()
+                .filter(protocol -> !criteria.equals(protocol.getProtocolGroup()))
+                .map(protocol -> {
+                    Map<String, Object> protocolMap = new HashMap<>();
+                    protocolMap.put("id", protocol.getId());
+                    protocolMap.put("title", protocol.getTitle());
+                    protocolMap.put("intro", protocol.getIntro());
+                    protocolMap.put("protocolGroup", protocol.getProtocolGroup());
+                    protocolMap.put("publicationDate", protocol.getPublicationDate());
+                    protocolMap.put("views", protocol.getViews());
+                    protocolMap.put("videoLink", protocol.getVideoLink());
 
-        return protocoList;
+                    return protocolMap;
+                })
+                .collect(Collectors.toList());
+
+        return protocolList;
     }
+
 
     @GetMapping("/mostviewed")
     public ResponseEntity<Protocol> getMostViewed() throws MyException {
