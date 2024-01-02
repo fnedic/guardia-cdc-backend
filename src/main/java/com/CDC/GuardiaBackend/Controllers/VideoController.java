@@ -6,13 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.CDC.GuardiaBackend.Entities.Video;
 import com.CDC.GuardiaBackend.Exceptions.AppException;
@@ -74,19 +68,20 @@ public class VideoController {
 
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteVideo(@PathVariable String id) throws MyException {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteVideo(@PathVariable String id) {
         try {
-            Optional<Video> optionalProtocol = videoRepository.findById(id);
-            if (optionalProtocol.isPresent()) {
+            Optional<Video> optionalVideo = videoRepository.findById(id);
+            if (optionalVideo.isPresent()) {
                 videoRepository.deleteById(id);
-                return null;
+                return ResponseEntity.ok().build();
             } else {
-                throw new MyException("Video no encontrado");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Video no encontrado");
             }
         } catch (Exception e) {
-            throw new MyException("Error al procesar solicitud en el controlador!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar solicitud en el controlador");
         }
     }
+
 
 }

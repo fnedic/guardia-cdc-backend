@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import com.CDC.GuardiaBackend.Enums.Specialties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.CDC.GuardiaBackend.Enums.Roles;
@@ -28,10 +29,12 @@ public class User {
     private String name;
     private String lastname;
     private String email;
-    private String password;
     private String dni;
     private String medicalRegistration;
     private Date startDate;
+
+    @JsonIgnore
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Roles role;

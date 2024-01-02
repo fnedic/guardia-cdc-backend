@@ -16,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, String>{
 
     Optional <User> findByEmail(String email);
 
+    List<User> findByRoleOrderByLastname(Roles role);
+
     @Query("SELECT u FROM User u WHERE u.email = :email")
     User searchByEmail(@Param("email") String email);
 

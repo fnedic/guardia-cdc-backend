@@ -7,9 +7,13 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.CDC.GuardiaBackend.Configs.UserAuthenticationProvider;
+import com.CDC.GuardiaBackend.Entities.Event;
 import com.CDC.GuardiaBackend.Enums.Specialties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -157,8 +161,8 @@ public class UserService  {
 
     }
 
-    public UserDto findByEmail(String email) {
-        User user = userRepository.findByEmail(email)
+    public UserDto findByID(String id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
         return userMapper.toUserDto(user);
     }
