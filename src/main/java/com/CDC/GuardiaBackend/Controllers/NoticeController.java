@@ -27,6 +27,7 @@ public class NoticeController {
             Notice optionalNotice = noticeRepository.findById("55af7770-f99a-4dfc-ae69-a4957e21bc60")
                     .orElseThrow(() -> new RuntimeException("Aviso no encontrado"));
             optionalNotice.setTitle(notice.getTitle());
+            optionalNotice.setLinkUrl(notice.getLinkUrl());
             noticeRepository.save(optionalNotice);
             return new ResponseEntity<>("Aviso publicado correctamente!", HttpStatus.OK);
         } catch (Exception e) {
