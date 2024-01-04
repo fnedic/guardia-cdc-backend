@@ -16,4 +16,5 @@ public enum Specialties {
     TOXICOLOGIA,
     TRAUMATOLOGIA,
     UROLOGIA,
+    DXIMAGENES,
 }
