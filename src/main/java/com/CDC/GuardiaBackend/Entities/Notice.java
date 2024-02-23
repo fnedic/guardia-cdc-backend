@@ -17,5 +17,6 @@ public class Notice {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String title;
+    private String linkUrl;
 
 }
